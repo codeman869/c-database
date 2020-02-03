@@ -43,7 +43,7 @@ describe 'database' do
         
         script << ".exit"
         result = run_script(script)
-        expect(result[-2]).to eq('db > Error: Table full')
+        expect(result[2]).to eq('db > Error: Table full')
         
     end
     
@@ -168,10 +168,32 @@ describe 'database' do
             "db > Executed.",
            "db > Tree:",
             "leaf (size 3)",
-            "  - 0 : 3",
-            "  - 1 : 1",
-            "  - 2 : 2",
+            "  - 0 : 1",
+            "  - 1 : 2",
+            "  - 2 : 3",
             "db > "
+        ])
+    end
+    
+    it 'prints an error message if there is a duplicate key' do
+        
+        script = [
+            "insert 1 user1 person1@example.com",
+            "insert 1 user1 person1@example.com",
+            "select",
+            ".exit",
+        ]
+        
+        result = run_script(script)
+        
+        expect(result).to match_array([
+       
+            "db > Executed.",
+            "db > Error: Duplicate key.",
+            "db > (1, user1, person1@example.com)",
+            "Executed.",
+            "db > ",
+            
         ])
     end
     
