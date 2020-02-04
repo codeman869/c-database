@@ -3,3 +3,4 @@ db
 .bundle/*
 Gemfile.lock
 *.db
+test.rb
